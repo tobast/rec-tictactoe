@@ -44,9 +44,9 @@ struct GameStatus
 {
 	GameStatus() : nextNested(9), isCircleTurn(true)
 	{
-		for(int over=0; over < 9; over++)
+		for(int over=0; over < 10; over++)
 		{
-			for(int nest=0; nest < 10; nest++)
+			for(int nest=0; nest < 9; nest++)
 				board[over][nest] = EMPTY;
 			boardRemainingCells[over]=9;
 		}
