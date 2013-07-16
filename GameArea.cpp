@@ -122,8 +122,14 @@ bool GameArea::playOn(GameArea::Cell cell)
 	else
 		gameStatus.board[cell.ttt][cell.nested] = CROSS_CELL;
 
+	gameStatus.boardRemainingCells[cell.ttt]--;
+
 	gameStatus.isCircleTurn ^= 1; // switch turns
-	gameStatus.nextNested = cell.nested;
+
+	if(gameStatus.boardRemainingCells[cell.nested] > 0)
+		gameStatus.nextNested = cell.nested;
+	else
+		gameStatus.nextNested = 9; // Play everywhere
 
 	// TODO check winning position
 

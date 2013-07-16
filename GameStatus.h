@@ -45,14 +45,18 @@ struct GameStatus
 	GameStatus() : nextNested(9), isCircleTurn(true)
 	{
 		for(int over=0; over < 9; over++)
+		{
 			for(int nest=0; nest < 10; nest++)
 				board[over][nest] = EMPTY_CELL;
+			boardRemainingCells[over]=9;
+		}
 	}
 
 	int nextNested;
 	bool isCircleTurn;
 	
 	CellStatus board[9][10]; // The 10th cell contains informations on the nested board
+	int boardRemainingCells[9];
 };
 
 #endif//DEF_GAMESTATUS
