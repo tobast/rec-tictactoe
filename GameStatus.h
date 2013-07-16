@@ -42,7 +42,7 @@ enum CellStatus
 
 struct GameStatus
 {
-	GameStatus() : nextNested(4), isCircleTurn(true)
+	GameStatus() : nextNested(9), isCircleTurn(true)
 	{
 		for(int over=0; over < 9; over++)
 			for(int nest=0; nest < 10; nest++)
