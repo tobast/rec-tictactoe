@@ -71,16 +71,16 @@ void GameArea::render()
 
 	drawTTT(zone, Color::Black, 8, 0);
 
-	for(int over=0; over < 9; over++)
+	for(int over=0; over < 10; over++)
 	{
 		for(int nested=0; nested < 9; nested++)
 		{
 			switch(gameStatus.board[over][nested])
 			{
-				case CIRCLE_CELL:
+				case CIRCLE:
 					drawCircle(Cell(over, nested));
 					break;
-				case CROSS_CELL:
+				case CROSS:
 					drawCross(Cell(over, nested));
 					break;
 				default:
@@ -112,15 +112,15 @@ GameArea::Cell GameArea::getCellOf(int x, int y) const
 
 bool GameArea::playOn(GameArea::Cell cell)
 {
-	if(gameStatus.board[cell.ttt][cell.nested] != EMPTY_CELL)
+	if(gameStatus.board[cell.ttt][cell.nested] != EMPTY)
 		return false;
 	else if(gameStatus.nextNested != cell.ttt && gameStatus.nextNested != 9)
 		return false;
 
 	if(gameStatus.isCircleTurn)
-		gameStatus.board[cell.ttt][cell.nested] = CIRCLE_CELL;
+		gameStatus.board[cell.ttt][cell.nested] = CIRCLE;
 	else
-		gameStatus.board[cell.ttt][cell.nested] = CROSS_CELL;
+		gameStatus.board[cell.ttt][cell.nested] = CROSS;
 
 	gameStatus.boardRemainingCells[cell.ttt]--;
 
@@ -131,7 +131,19 @@ bool GameArea::playOn(GameArea::Cell cell)
 	else
 		gameStatus.nextNested = 9; // Play everywhere
 
-	// TODO check winning position
+	if(gameStatus.board[9][cell.ttt] == EMPTY)
+	{
+		PlayerType nestWinner = winnerOf(cell.ttt);
+		if(nestWinner != EMPTY)
+		{
+			gameStatus.board[9][cell.ttt] = nestWinner;
+			PlayerType winner = winnerOf(9);
+			if(winner != EMPTY)
+			{
+				gameWon(winner);
+			}
+		}
+	}
 
 	return true;
 }
@@ -156,44 +168,105 @@ void GameArea::drawTTT(Rect<int> area, Color color, const int thickness, const i
 	}
 }
 
-void GameArea::drawCross(GameArea::Cell cell)
+void GameArea::drawCross(GameArea::Cell cell, int alpha)
 {
-	const Color color = Color(0xAB, 0x14, 0x00); // Red
+	if(cell.ttt != 9)
+	{
+		drawCross(Rect<int>(
+			zone.left + (cell.ttt%3)*(zone.width/3) +
+				(cell.nested%3)*(zone.width/9),
+			zone.top + (cell.ttt/3)*(zone.height/3) +
+				(cell.nested/3)*(zone.height/9),
+			zone.width/9, zone.height/9), alpha);
+	}
+	else
+	{
+		drawCross(Rect<int>(
+			zone.left + (cell.nested%3)*(zone.width/3),
+			zone.top + (cell.nested/3)*(zone.height/3),
+			zone.width/3, zone.height/3), alpha/2);
+	}
+}
+void GameArea::drawCross(Rect<int> area, int alpha)
+{
+	const Color color = Color(0xAB, 0x14, 0x00, alpha); // Red
 	const int margin = 12;
-	int length = sqrt(pow(zone.width/9 - 2*margin, 2) + pow(zone.height/9 - 2*margin, 2));
+	int length = sqrt(pow(area.width - 2*margin, 2) + pow(area.height - 2*margin, 2));
 	
 	RectangleShape rect(Vector2f(4, length));
 	rect.setOrigin(2,0);
 	rect.setFillColor(color);
 
-	rect.setPosition(zone.left + (cell.ttt%3)*(zone.width/3) +
-			(cell.nested%3)*(zone.width/9) + margin,
-		zone.top + (cell.ttt/3)*(zone.height/3) +
-			(cell.nested/3)*(zone.height/9) + margin);
+	rect.setPosition(area.left + margin, area.top + margin);
 	rect.setRotation(315);
 	win.draw(rect);
 
-	rect.setPosition(zone.left + (cell.ttt%3)*(zone.width/3) +
-			(cell.nested%3)*(zone.width/9) + margin,
-		zone.top + (cell.ttt/3)*(zone.height/3) +
-			(cell.nested/3 + 1)*(zone.height/9) - margin);
+	rect.setPosition(area.left + margin, area.top + area.height - margin);
 	rect.setRotation(225);
 	win.draw(rect);
 }
 
-void GameArea::drawCircle(GameArea::Cell cell)
+void GameArea::drawCircle(GameArea::Cell cell, int alpha)
 {
-	const Color color = Color(0x3E, 0xA4, 0x1C); // Green
+	if(cell.ttt != 9)
+	{
+		drawCircle(Rect<int>(
+			zone.left + (cell.ttt%3)*(zone.width/3) +
+				(cell.nested%3)*(zone.width/9),
+			zone.top + (cell.ttt/3)*(zone.height/3) +
+				(cell.nested/3)*(zone.height/9),
+			zone.width/9, zone.height/9), alpha);
+	}
+	else
+	{
+		drawCircle(Rect<int>(
+			zone.left + (cell.nested%3)*(zone.width/3),
+			zone.top + (cell.nested/3)*(zone.height/3),
+			zone.width/3, zone.height/3), alpha/2);
+	}
+}
+void GameArea::drawCircle(Rect<int> area, int alpha)
+{
+	const Color color = Color(0x3E, 0xA4, 0x1C, alpha); // Green
 	const int margin = 12, thickness=4;
 
-	CircleShape circle(zone.height/18 - margin, 60);
+	CircleShape circle(area.height/2 - margin, 60);
 	circle.setFillColor(Color(0,0,0,0)); // Transparent
 	circle.setOutlineColor(color);
 	circle.setOutlineThickness(thickness);
-	circle.setPosition(zone.left + (cell.ttt%3)*(zone.width/3) +
-			(cell.nested%3)*(zone.width/9) + margin,
-		zone.top + (cell.ttt/3)*(zone.height/3) +
-			(cell.nested/3)*(zone.height/9) + margin);
+	circle.setPosition(area.left + margin, area.top + margin);
 	win.draw(circle);
+}
+
+PlayerType GameArea::winnerOf(int nested)
+{
+	PlayerType* board = gameStatus.board[nested];
+
+	for(int row=0; row < 3; row++)
+	{
+		if(board[row*3] != EMPTY && board[row*3] == board[row*3+1] &&
+				board[row*3] == board[row*3+2])
+			return board[row*3];
+	}
+	for(int col=0; col < 3; col++)
+	{
+		if(board[col] != EMPTY && board[col] == board[col+3] &&
+				board[col] == board[col+6])
+			return board[col];
+	}
+	if(board[0] != EMPTY && board[0] == board[4] && board[0] == board[8]) // desc. diag.
+		return board[0];
+	if(board[6] != EMPTY && board[6] == board[4] && board[6] == board[2]) // asc. diag.
+		return board[6];
+
+	return EMPTY;
+}
+
+void GameArea::gameWon(PlayerType winner)
+{
+	if(winner == CIRCLE)
+		drawCircle(zone);
+	else
+		drawCross(zone);
 }
 

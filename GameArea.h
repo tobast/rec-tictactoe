@@ -60,8 +60,13 @@ class GameArea
 
 	private:
 		void drawTTT(sf::Rect<int> area, sf::Color color, const int thickness, const int margin);
-		void drawCross(Cell cell);
-		void drawCircle(Cell cell);
+		void drawCross(Cell cell, int alpha = 0xff);
+		void drawCross(sf::Rect<int> area, int alpha=0xff);
+		void drawCircle(Cell cell, int alpha = 0xff);
+		void drawCircle(sf::Rect<int> area, int alpha = 0xff);
+
+		PlayerType winnerOf(int nested); // 9 = overall ttt
+		void gameWon(PlayerType winner);
 
 	private:
 		sf::RenderWindow& win;

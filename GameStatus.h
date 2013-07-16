@@ -35,9 +35,9 @@
 #ifndef DEF_GAMESTATUS
 #define DEF_GAMESTATUS
 
-enum CellStatus
+enum PlayerType
 {
-	EMPTY_CELL, CIRCLE_CELL, CROSS_CELL
+	EMPTY, CIRCLE, CROSS
 };
 
 struct GameStatus
@@ -47,7 +47,7 @@ struct GameStatus
 		for(int over=0; over < 9; over++)
 		{
 			for(int nest=0; nest < 10; nest++)
-				board[over][nest] = EMPTY_CELL;
+				board[over][nest] = EMPTY;
 			boardRemainingCells[over]=9;
 		}
 	}
@@ -55,7 +55,7 @@ struct GameStatus
 	int nextNested;
 	bool isCircleTurn;
 	
-	CellStatus board[9][10]; // The 10th cell contains informations on the nested board
+	PlayerType board[10][9]; // The 10th array contains informations on the nested board
 	int boardRemainingCells[9];
 };
 
