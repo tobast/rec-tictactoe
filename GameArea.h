@@ -32,14 +32,20 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/gpl.txt>.
  */
 
-#include "MainWindow.h"
-#include "tools.h"
+#ifndef DEF_GAMEAREA
+#define DEF_GAMEAREA
 
-int main(void)
+#include <SFML/Graphics.hpp>
+
+class GameArea
 {
-	MainWindow win(tl("Recursive Tic-Tac-Toe"), 800, 600);
-	win.exec();
+	public:
+		GameArea(sf::RenderWindow& win);
+		void render();
 
-	return 0;
-}
+	private:
+		sf::RenderWindow& win;
+};
+
+#endif//DEF_GAMEAREA
 

@@ -32,14 +32,16 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/gpl.txt>.
  */
 
-#include "MainWindow.h"
-#include "tools.h"
+#include "GameArea.h"
+using namespace sf;
 
-int main(void)
+GameArea::GameArea(RenderWindow& win) :
+	win(win)
 {
-	MainWindow win(tl("Recursive Tic-Tac-Toe"), 800, 600);
-	win.exec();
+}
 
-	return 0;
+void GameArea::render()
+{
+	//TODO
 }
 

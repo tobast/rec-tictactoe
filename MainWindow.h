@@ -32,14 +32,27 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/gpl.txt>.
  */
 
-#include "MainWindow.h"
-#include "tools.h"
+#ifndef DEF_MAINWINDOW
+#define DEF_MAINWINDOW
 
-int main(void)
+#include <SFML/Graphics.hpp>
+#include <string>
+
+#include "GameArea.h"
+
+class MainWindow
 {
-	MainWindow win(tl("Recursive Tic-Tac-Toe"), 800, 600);
-	win.exec();
+	public:
+		MainWindow(std::string title, int w, int h);
+		void exec();
 
-	return 0;
-}
+	private: //meth
+		void render();
+	
+	private:
+		sf::RenderWindow win;
+		GameArea gameArea;
+};
+
+#endif//DEF_MAINWINDOW
 

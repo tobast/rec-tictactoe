@@ -33,13 +33,43 @@
  */
 
 #include "MainWindow.h"
-#include "tools.h"
+using namespace sf;
 
-int main(void)
+MainWindow::MainWindow(std::string title, int w, int h) :
+	win(), gameArea(win)
 {
-	MainWindow win(tl("Recursive Tic-Tac-Toe"), 800, 600);
-	win.exec();
+	win.create(VideoMode(w, h), title);
+	win.setVerticalSyncEnabled(true);
+	
+	render();
+}
 
-	return 0;
+void MainWindow::exec()
+{
+	Clock clock;
+	while(win.isOpen())
+	{
+		clock.restart();
+
+		Event event;
+		while(win.pollEvent(event))
+		{
+			// Processing the different events.
+			if(event.type == sf::Event::Closed)
+				win.close();
+		}
+
+		render();
+
+		// Sleeping 10ms - ellapsed (100fps max. framerate)
+		sleep(milliseconds(10) - clock.getElapsedTime());
+	}
+}
+
+void MainWindow::render()
+{
+	win.clear(Color::White);
+	gameArea.render();
+	win.display();
 }
 
