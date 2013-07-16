@@ -37,7 +37,7 @@
 
 int main(void)
 {
-	MainWindow win(tl("Recursive Tic-Tac-Toe"), 800, 600);
+	MainWindow win(tl("Recursive Tic-Tac-Toe"), 600, 600);
 	win.exec();
 
 	return 0;

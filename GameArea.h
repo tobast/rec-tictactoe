@@ -36,15 +36,20 @@
 #define DEF_GAMEAREA
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Rect.hpp>
 
 class GameArea
 {
 	public:
-		GameArea(sf::RenderWindow& win);
+		GameArea(sf::RenderWindow& win, sf::Rect<int> zone);
 		void render();
 
 	private:
+		void drawTTT(sf::Rect<int> area, sf::Color color, const int thickness, const int margin);
+
+	private:
 		sf::RenderWindow& win;
+		sf::Rect<int> zone;
 };
 
 #endif//DEF_GAMEAREA

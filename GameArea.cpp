@@ -35,13 +35,44 @@
 #include "GameArea.h"
 using namespace sf;
 
-GameArea::GameArea(RenderWindow& win) :
-	win(win)
+GameArea::GameArea(RenderWindow& win, Rect<int> zone) :
+	win(win), zone(zone)
 {
 }
 
 void GameArea::render()
 {
-	//TODO
+	int colWidth = zone.width / 3, rowHeight = zone.height / 3;
+	for(int row=0; row < 3; row++)
+	{
+		for(int col=0; col < 3; col++)
+		{
+			Rect<int> subZone(col * colWidth + zone.left, row * rowHeight + zone.top,
+					colWidth, rowHeight);
+			drawTTT(subZone, Color(0x25, 0x4e, 0xc4), 4, 4);
+		}
+	}
+
+	drawTTT(zone, Color::Black, 8, 4);
+}
+
+void GameArea::drawTTT(Rect<int> area, Color color, const int thickness, const int margin)
+{
+	const int colWidth = area.width / 3, rowHeight = area.height / 3;
+
+	RectangleShape rect;
+	rect.setFillColor(color);
+	for(int line=1; line < 3; line++)
+	{
+		rect.setSize(Vector2f(thickness, area.height - 2*margin));
+		rect.setPosition(area.left + line * colWidth - thickness/2,
+				area.top + margin);
+		win.draw(rect);
+
+		rect.setSize(Vector2f(area.width - 2*margin, thickness));
+		rect.setPosition(area.left + margin,
+				area.top + line * rowHeight - thickness/2);
+		win.draw(rect);
+	}
 }
 

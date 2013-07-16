@@ -36,7 +36,8 @@
 using namespace sf;
 
 MainWindow::MainWindow(std::string title, int w, int h) :
-	win(), gameArea(win)
+	win(),
+	gameArea(win, Rect<int>(0,0, w, h))
 {
 	win.create(VideoMode(w, h), title);
 	win.setVerticalSyncEnabled(true);
@@ -46,23 +47,23 @@ MainWindow::MainWindow(std::string title, int w, int h) :
 
 void MainWindow::exec()
 {
-	Clock clock;
+//	Clock clock;
 	while(win.isOpen())
 	{
-		clock.restart();
+//		clock.restart();
 
 		Event event;
-		while(win.pollEvent(event))
-		{
-			// Processing the different events.
-			if(event.type == sf::Event::Closed)
-				win.close();
-		}
+		if(!win.waitEvent(event))
+			continue;
+
+		// Processing the different events.
+		if(event.type == sf::Event::Closed)
+			win.close();
 
 		render();
 
 		// Sleeping 10ms - ellapsed (100fps max. framerate)
-		sleep(milliseconds(10) - clock.getElapsedTime());
+//		sleep(milliseconds(10) - clock.getElapsedTime());
 	}
 }
 

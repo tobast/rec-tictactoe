@@ -36,6 +36,7 @@
 #define DEF_MAINWINDOW
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Rect.hpp>
 #include <string>
 
 #include "GameArea.h"
