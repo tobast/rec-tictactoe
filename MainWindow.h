@@ -40,6 +40,7 @@
 #include <string>
 
 #include "GameArea.h"
+#include "GameStatus.h"
 
 class MainWindow
 {
@@ -52,6 +53,8 @@ class MainWindow
 	
 	private:
 		sf::RenderWindow win;
+
+		GameStatus gameStatus;
 		GameArea gameArea;
 };
 

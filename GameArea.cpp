@@ -35,8 +35,8 @@
 #include "GameArea.h"
 using namespace sf;
 
-GameArea::GameArea(RenderWindow& win, Rect<int> zone) :
-	win(win), zone(zone)
+GameArea::GameArea(RenderWindow& win, Rect<int> zone, GameStatus& gameStatus) :
+	win(win), zone(zone), gameStatus(gameStatus)
 {
 }
 
@@ -54,6 +54,24 @@ void GameArea::render()
 	}
 
 	drawTTT(zone, Color::Black, 8, 4);
+
+	for(int over=0; over < 9; over++)
+	{
+		for(int nested=0; nested < 9; nested++)
+		{
+			switch(gameStatus.board[over][nested])
+			{
+				case CIRCLE_CELL:
+					drawCircle(Cell(over, nested));
+					break;
+				case CROSS_CELL:
+					drawCross(Cell(over, nested));
+					break;
+				default:
+					break;
+			}
+		}
+	}
 }
 
 GameArea::Cell GameArea::getCellOf(int x, int y) const
@@ -76,6 +94,26 @@ GameArea::Cell GameArea::getCellOf(int x, int y) const
 	return cell;
 }
 
+bool GameArea::playOn(GameArea::Cell cell)
+{
+	if(gameStatus.board[cell.ttt][cell.nested] != EMPTY_CELL)
+		return false;
+	else if(gameStatus.nextNested != cell.ttt)
+		return false;
+
+	if(gameStatus.isCircleTurn)
+		gameStatus.board[cell.ttt][cell.nested] = CIRCLE_CELL;
+	else
+		gameStatus.board[cell.ttt][cell.nested] = CROSS_CELL;
+
+	gameStatus.isCircleTurn ^= 1; // switch turns
+	gameStatus.nextNested = cell.nested;
+
+	// TODO check winning position
+
+	return true;
+}
+
 void GameArea::drawTTT(Rect<int> area, Color color, const int thickness, const int margin)
 {
 	const int colWidth = area.width / 3, rowHeight = area.height / 3;
@@ -94,5 +132,45 @@ void GameArea::drawTTT(Rect<int> area, Color color, const int thickness, const i
 				area.top + line * rowHeight - thickness/2);
 		win.draw(rect);
 	}
+}
+
+void GameArea::drawCross(GameArea::Cell cell)
+{
+	const Color color = Color(0xAB, 0x14, 0x00); // Red
+	const int margin = 8;
+	int length = sqrt(pow(zone.width/9 - 2*margin, 2) + pow(zone.height/9 - 2*margin, 2));
+	
+	RectangleShape rect(Vector2f(4, length));
+	rect.setOrigin(2,0);
+	rect.setFillColor(color);
+
+	rect.setPosition(zone.left + (cell.ttt%3)*(zone.width/3) +
+			(cell.nested%3)*(zone.width/9) + margin,
+		zone.top + (cell.ttt/3)*(zone.height/3) +
+			(cell.nested/3)*(zone.height/9) + margin);
+	rect.setRotation(315);
+	win.draw(rect);
+
+	rect.setPosition(zone.left + (cell.ttt%3)*(zone.width/3) +
+			(cell.nested%3)*(zone.width/9) + margin,
+		zone.top + (cell.ttt/3)*(zone.height/3) +
+			(cell.nested/3 + 1)*(zone.height/9) - margin);
+	rect.setRotation(225);
+	win.draw(rect);
+}
+
+void GameArea::drawCircle(GameArea::Cell cell)
+{
+	const Color color = Color(0x3E, 0xA4, 0x1C); // Green
+	const int margin = 8, thickness=4;
+
+	CircleShape circle(zone.height/18 - margin, 30);
+	circle.setOutlineColor(color);
+	circle.setOutlineThickness(thickness);
+	circle.setPosition(zone.left + (cell.ttt%3)*(zone.width/3) +
+			(cell.nested%3)*(zone.width/9) + margin,
+		zone.top + (cell.ttt/3)*(zone.height/3) +
+			(cell.nested/3)*(zone.height/9) + margin);
+	win.draw(circle);
 }
 

@@ -37,7 +37,8 @@ using namespace sf;
 
 MainWindow::MainWindow(std::string title, int w, int h) :
 	win(),
-	gameArea(win, Rect<int>(0,0, w, h))
+	gameStatus(),
+	gameArea(win, Rect<int>(0,0, w, h), gameStatus)
 {
 	win.create(VideoMode(w, h), title);
 	win.setVerticalSyncEnabled(true);
@@ -63,7 +64,8 @@ void MainWindow::exec()
 			{
 				GameArea::Cell cell = gameArea.getCellOf(
 						event.mouseButton.x, event.mouseButton.y);
-				//TODO
+
+				gameArea.playOn(cell); // result can be checked (false = not played)
 			}
 		}
 

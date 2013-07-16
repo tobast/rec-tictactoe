@@ -32,43 +32,28 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/gpl.txt>.
  */
 
-#ifndef DEF_GAMEAREA
-#define DEF_GAMEAREA
+#ifndef DEF_GAMESTATUS
+#define DEF_GAMESTATUS
 
-#include <SFML/Graphics.hpp>
-#include <SFML/Graphics/Rect.hpp>
-#include <cmath>
-
-#include "GameStatus.h"
-
-class GameArea
+enum CellStatus
 {
-	public:
-		struct Cell {
-			Cell() : ttt(-1), nested(-1)  {}
-			Cell(int ttt, int nested) :
-				ttt(ttt), nested(nested) {}
-
-			int ttt, nested;
-		};
-
-		GameArea(sf::RenderWindow& win, sf::Rect<int> zone, GameStatus& gameStatus);
-		void render();
-		Cell getCellOf(int x, int y) const;
-
-		bool playOn(Cell cell);
-
-	private:
-		void drawTTT(sf::Rect<int> area, sf::Color color, const int thickness, const int margin);
-		void drawCross(Cell cell);
-		void drawCircle(Cell cell);
-
-	private:
-		sf::RenderWindow& win;
-		sf::Rect<int> zone;
-
-		GameStatus& gameStatus;
+	EMPTY_CELL, CIRCLE_CELL, CROSS_CELL
 };
 
-#endif//DEF_GAMEAREA
+struct GameStatus
+{
+	GameStatus() : nextNested(4), isCircleTurn(true)
+	{
+		for(int over=0; over < 9; over++)
+			for(int nest=0; nest < 10; nest++)
+				board[over][nest] = EMPTY_CELL;
+	}
+
+	int nextNested;
+	bool isCircleTurn;
+	
+	CellStatus board[9][10]; // The 10th cell contains informations on the nested board
+};
+
+#endif//DEF_GAMESTATUS
 
