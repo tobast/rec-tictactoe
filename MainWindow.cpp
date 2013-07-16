@@ -47,11 +47,8 @@ MainWindow::MainWindow(std::string title, int w, int h) :
 
 void MainWindow::exec()
 {
-//	Clock clock;
 	while(win.isOpen())
 	{
-//		clock.restart();
-
 		Event event;
 		if(!win.waitEvent(event))
 			continue;
@@ -61,9 +58,6 @@ void MainWindow::exec()
 			win.close();
 
 		render();
-
-		// Sleeping 10ms - ellapsed (100fps max. framerate)
-//		sleep(milliseconds(10) - clock.getElapsedTime());
 	}
 }
 
