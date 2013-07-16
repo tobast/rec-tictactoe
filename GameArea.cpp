@@ -35,7 +35,7 @@
 #include "GameArea.h"
 using namespace sf;
 
-GameArea::GameArea(RenderWindow& win, Rect<int> zone, GameStatus& gameStatus) :
+GameArea::GameArea(RenderWindow* win, Rect<int> zone, GameStatus& gameStatus) :
 	win(win), zone(zone), gameStatus(gameStatus)
 {
 }
@@ -57,7 +57,7 @@ void GameArea::render()
 				(gameStatus.nextNested/3) * rowHeight + zone.top);
 	}
 	nextNestedRect.setFillColor(Color(0xBA, 0xAC, 0x44)); // Yellow
-	win.draw(nextNestedRect);
+	win->draw(nextNestedRect);
 
 	for(int row=0; row < 3; row++)
 	{
@@ -159,12 +159,12 @@ void GameArea::drawTTT(Rect<int> area, Color color, const int thickness, const i
 		rect.setSize(Vector2f(thickness, area.height - 2*margin));
 		rect.setPosition(area.left + line * colWidth - thickness/2,
 				area.top + margin);
-		win.draw(rect);
+		win->draw(rect);
 
 		rect.setSize(Vector2f(area.width - 2*margin, thickness));
 		rect.setPosition(area.left + margin,
 				area.top + line * rowHeight - thickness/2);
-		win.draw(rect);
+		win->draw(rect);
 	}
 }
 
@@ -199,11 +199,11 @@ void GameArea::drawCross(Rect<int> area, int alpha)
 
 	rect.setPosition(area.left + margin, area.top + margin);
 	rect.setRotation(315);
-	win.draw(rect);
+	win->draw(rect);
 
 	rect.setPosition(area.left + margin, area.top + area.height - margin);
 	rect.setRotation(225);
-	win.draw(rect);
+	win->draw(rect);
 }
 
 void GameArea::drawCircle(GameArea::Cell cell, int alpha)
@@ -235,7 +235,7 @@ void GameArea::drawCircle(Rect<int> area, int alpha)
 	circle.setOutlineColor(color);
 	circle.setOutlineThickness(thickness);
 	circle.setPosition(area.left + margin, area.top + margin);
-	win.draw(circle);
+	win->draw(circle);
 }
 
 PlayerType GameArea::winnerOf(int nested)

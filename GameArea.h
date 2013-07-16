@@ -52,7 +52,8 @@ class GameArea
 			int ttt, nested;
 		};
 
-		GameArea(sf::RenderWindow& win, sf::Rect<int> zone, GameStatus& gameStatus);
+		GameArea(sf::RenderWindow* win, sf::Rect<int> zone, GameStatus& gameStatus);
+		void setWindow(sf::RenderWindow* _win) { win = _win; }
 		void render();
 		Cell getCellOf(int x, int y) const;
 
@@ -69,7 +70,7 @@ class GameArea
 		void gameWon(PlayerType winner);
 
 	private:
-		sf::RenderWindow& win;
+		sf::RenderWindow* win;
 		sf::Rect<int> zone;
 
 		GameStatus& gameStatus;

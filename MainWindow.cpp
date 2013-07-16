@@ -36,12 +36,12 @@
 using namespace sf;
 
 MainWindow::MainWindow(std::string title, int w, int h) :
-	win(),
+	win(VideoMode(w, h), title),
 	gameStatus(),
-	gameArea(win, Rect<int>(0,0, w, h), gameStatus)
+	gameArea(NULL, Rect<int>(0,0, w, h), gameStatus)
 {
-	win.create(VideoMode(w, h), title);
 	win.setVerticalSyncEnabled(true);
+	gameArea.setWindow(&win);
 	
 	render();
 }
