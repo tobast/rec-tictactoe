@@ -33,6 +33,7 @@
  */
 
 #include "GameArea.h"
+#include <cstdio>
 using namespace sf;
 
 GameArea::GameArea(RenderWindow* win, Rect<int> zone, GameStatus& gameStatus) :
@@ -87,6 +88,17 @@ void GameArea::render()
 					break;
 			}
 		}
+	}
+	switch(gameStatus.winner)
+	{
+		case CIRCLE:
+			drawCircle(zone, 0xff/2);
+			break;
+		case CROSS:
+			drawCross(zone, 0xff/2);
+			break;
+		default:
+			break;
 	}
 }
 
@@ -264,9 +276,6 @@ PlayerType GameArea::winnerOf(int nested)
 
 void GameArea::gameWon(PlayerType winner)
 {
-	if(winner == CIRCLE)
-		drawCircle(zone);
-	else
-		drawCross(zone);
+	gameStatus.winner = winner;
 }
 

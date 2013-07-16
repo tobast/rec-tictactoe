@@ -42,7 +42,7 @@ enum PlayerType
 
 struct GameStatus
 {
-	GameStatus() : nextNested(9), isCircleTurn(true)
+	GameStatus() : nextNested(9), isCircleTurn(true), winner(EMPTY)
 	{
 		for(int over=0; over < 10; over++)
 		{
@@ -56,6 +56,7 @@ struct GameStatus
 	bool isCircleTurn;
 	
 	PlayerType board[10][9]; // The 10th array contains informations on the nested board
+	PlayerType winner;
 	int boardRemainingCells[9];
 };
 
