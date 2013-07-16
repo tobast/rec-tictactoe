@@ -41,8 +41,17 @@
 class GameArea
 {
 	public:
+		struct Cell {
+			Cell() : ttt(-1), nested(-1) {}
+			Cell(int ttt, int nested) :
+				ttt(ttt), nested(nested) {}
+
+			int ttt, nested;
+		};
+
 		GameArea(sf::RenderWindow& win, sf::Rect<int> zone);
 		void render();
+		Cell getCellOf(int x, int y) const;
 
 	private:
 		void drawTTT(sf::Rect<int> area, sf::Color color, const int thickness, const int margin);

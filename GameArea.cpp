@@ -56,6 +56,26 @@ void GameArea::render()
 	drawTTT(zone, Color::Black, 8, 4);
 }
 
+GameArea::Cell GameArea::getCellOf(int x, int y) const
+{
+	Cell cell;
+	x -= zone.left;
+	y -= zone.top;
+
+	if(x < 0 || x >= zone.width || y < 0 || y > zone.height)
+		return cell;
+
+	int row = 3*y / zone.height, col = 3*x / zone.width;
+	cell.ttt = row*3+col;
+
+	x -= col * zone.width/3;
+	y -= row * zone.height/3;
+
+	cell.nested = 3 * ((9*y)/zone.height) + ((9*x)/zone.width);
+
+	return cell;
+}
+
 void GameArea::drawTTT(Rect<int> area, Color color, const int thickness, const int margin)
 {
 	const int colWidth = area.width / 3, rowHeight = area.height / 3;

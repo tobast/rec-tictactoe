@@ -47,17 +47,30 @@ MainWindow::MainWindow(std::string title, int w, int h) :
 
 void MainWindow::exec()
 {
+	Clock clock;
 	while(win.isOpen())
 	{
-		Event event;
-		if(!win.waitEvent(event))
-			continue;
+		clock.restart();
 
-		// Processing the different events.
-		if(event.type == sf::Event::Closed)
-			win.close();
+		Event event;
+		while(win.pollEvent(event))
+		{
+			// Processing the different events.
+			if(event.type == sf::Event::Closed)
+				win.close();
+
+			if(event.type == Event::MouseButtonReleased)
+			{
+				GameArea::Cell cell = gameArea.getCellOf(
+						event.mouseButton.x, event.mouseButton.y);
+				//TODO
+			}
+		}
 
 		render();
+
+		// At most 60fps
+		sleep(milliseconds(16) - clock.getElapsedTime());
 	}
 }
 
