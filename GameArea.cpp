@@ -42,18 +42,25 @@ GameArea::GameArea(RenderWindow& win, Rect<int> zone, GameStatus& gameStatus) :
 
 void GameArea::render()
 {
-	int colWidth = zone.width / 3, rowHeight = zone.height / 3;
+	const int colWidth = zone.width / 3, rowHeight = zone.height / 3;
+
+	RectangleShape nextNestedRect(Vector2f(colWidth, rowHeight));
+	nextNestedRect.setFillColor(Color(0xBA, 0xAC, 0x44)); // Yellow
+	nextNestedRect.setPosition((gameStatus.nextNested % 3) * colWidth + zone.left,
+			(gameStatus.nextNested/3) * rowHeight + zone.top);
+	win.draw(nextNestedRect);
+
 	for(int row=0; row < 3; row++)
 	{
 		for(int col=0; col < 3; col++)
 		{
 			Rect<int> subZone(col * colWidth + zone.left, row * rowHeight + zone.top,
 					colWidth, rowHeight);
-			drawTTT(subZone, Color(0x25, 0x4e, 0xc4), 4, 4);
+			drawTTT(subZone, Color(0x25, 0x4e, 0xc4), 4, 0);
 		}
 	}
 
-	drawTTT(zone, Color::Black, 8, 4);
+	drawTTT(zone, Color::Black, 8, 0);
 
 	for(int over=0; over < 9; over++)
 	{
@@ -165,6 +172,7 @@ void GameArea::drawCircle(GameArea::Cell cell)
 	const int margin = 8, thickness=4;
 
 	CircleShape circle(zone.height/18 - margin, 30);
+	circle.setFillColor(Color(0,0,0,0)); // Transparent
 	circle.setOutlineColor(color);
 	circle.setOutlineThickness(thickness);
 	circle.setPosition(zone.left + (cell.ttt%3)*(zone.width/3) +
