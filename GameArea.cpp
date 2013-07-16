@@ -33,7 +33,6 @@
  */
 
 #include "GameArea.h"
-#include <cstdio>
 using namespace sf;
 
 GameArea::GameArea(RenderWindow* win, Rect<int> zone, GameStatus& gameStatus) :
